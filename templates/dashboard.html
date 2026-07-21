@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - InterviewIQ{% endblock %}
+
+{% block header_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="glass-card stat-card">
+        <div class="stat-icon primary"><i class="ri-vidicon-line"></i></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_interviews }}</span>
+            <span class="stat-label">Total Interviews</span>
+        </div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-icon success"><i class="ri-award-line"></i></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ avg_score }}%</span>
+            <span class="stat-label">Average Score</span>
+        </div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-icon warning"><i class="ri-questionnaire-line"></i></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_questions }}</span>
+            <span class="stat-label">Questions Answered</span>
+        </div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-icon danger"><i class="ri-timer-line"></i></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ duration_sum }}m</span>
+            <span class="stat-label">Practice Minutes</span>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-layout">
+    <div class="glass-card dashboard-widget">
+        <h3 class="widget-title">Performance Trend</h3>
+        <div style="height: 300px; position: relative;">
+            {% if chart_data.labels %}
+                <canvas id="progressChart"></canvas>
+            {% else %}
+                <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                    No interview data available yet. Complete your first session to view analytics.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+        <div class="glass-card dashboard-widget" style="padding: 24px;">
+            <h3 class="widget-title" style="margin-bottom: 16px;">Quick Actions</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="{{ url_for('setup') }}" class="btn-primary" style="justify-content: center;">
+                    <i class="ri-play-circle-line"></i> Start Interview Practice
+                </a>
+            </div>
+        </div>
+
+        <div class="glass-card dashboard-widget" style="flex: 1;">
+            <h3 class="widget-title">Recent Activity</h3>
+            <div class="recent-list">
+                {% if recent_interviews %}
+                    {% for interview in recent_interviews %}
+                        <div class="recent-item">
+                            <div class="item-info">
+                                <a href="{{ url_for('feedback', interview_id=interview.id) }}" class="item-title hover-glow">
+                                    {{ interview.category }}
+                                </a>
+                                <span class="item-meta">{{ interview.created_at.split(' ')[0] }} &bull; {{ interview.difficulty }}</span>
+                            </div>
+                            <div>
+                                <span class="score-badge {% if interview.overall_score and interview.overall_score >= 80 %}high{% endif %}">
+                                    {% if interview.overall_score %}{{ interview.overall_score|int }}%{% else %}Incomplete{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 40px 0; color: var(--text-muted);">
+                        No recent activity recorded.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        {% if chart_data.labels %}
+            const labels = {{ chart_data['labels']|tojson }};
+            const values = {{ chart_data['values']|tojson }};
+            renderProgressChart("progressChart", labels, values);
+        {% endif %}
+    });
+</script>
+{% endblock %}

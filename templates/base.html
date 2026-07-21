@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}InterviewIQ{% endblock %} - Practice. Improve. Get Hired.</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if current_user.is_authenticated and not hide_sidebar %}
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <a href="{{ url_for('dashboard') }}" class="logo">
+                    <i class="ri-brain-line"></i> InterviewIQ
+                </a>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+                            <i class="ri-dashboard-line"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('setup') }}" class="sidebar-link">
+                            <i class="ri-play-circle-line"></i> Start Interview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('history') }}" class="sidebar-link">
+                            <i class="ri-history-line"></i> History
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('profile') }}" class="sidebar-link">
+                            <i class="ri-user-line"></i> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('settings') }}" class="sidebar-link">
+                            <i class="ri-settings-3-line"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-bottom">
+                <a href="{{ url_for('logout') }}" class="sidebar-link">
+                    <i class="ri-logout-box-r-line"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="theme-toggle-btn" id="menuToggle" style="display: none; margin-right: 16px;">
+                        <i class="ri-menu-line"></i>
+                    </button>
+                    <h1 class="page-title">{% block header_title %}{% endblock %}</h1>
+                </div>
+                <div class="user-profile-menu">
+                    <button class="theme-toggle-btn" id="themeToggle">
+                        <i class="ri-sun-line"></i>
+                    </button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                        <span style="font-weight: 600; font-size: 14px;">{{ current_user.username }}</span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">Candidate</span>
+                    </div>
+                </div>
+            </header>
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+        {% block public_content %}{% endblock %}
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

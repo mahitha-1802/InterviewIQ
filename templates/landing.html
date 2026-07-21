@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to InterviewIQ{% endblock %}
+
+{% block public_content %}
+<div class="interactive-background">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+</div>
+
+<nav class="landing-nav">
+    <div class="logo">
+        <i class="ri-brain-line"></i> InterviewIQ
+    </div>
+    <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#workflow" class="nav-link">How It Works</a>
+        <a href="#categories" class="nav-link">Categories</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn-primary">Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="nav-link">Sign In</a>
+            <a href="{{ url_for('register') }}" class="btn-primary">Get Started</a>
+        {% endif %}
+    </div>
+</nav>
+
+<header class="hero-section">
+    <span class="hero-tag">Virtual AI Interview Practice</span>
+    <h1 class="hero-title">Practice. Improve. <span>Get Hired.</span></h1>
+    <p class="hero-subtitle">
+        Accelerate your career with real-time adaptive AI interviews. Speak naturally, receive granular evaluations on key metrics, and refine your skills in a realistic simulation interface.
+    </p>
+    <div class="hero-actions">
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn-primary">Go to Dashboard <i class="ri-arrow-right-line"></i></a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn-primary">Start Practicing Free <i class="ri-arrow-right-line"></i></a>
+            <a href="{{ url_for('login') }}" class="btn-secondary">Learn More</a>
+        {% endif %}
+    </div>
+</header>
+
+<section id="features" class="section-container">
+    <div class="section-header">
+        <h2 class="section-title">Engineered for Interview Excellence</h2>
+        <p class="section-subtitle">Discover the technologies powering your preparation journey.</p>
+    </div>
+    <div class="card-grid">
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="ri-voiceprint-line"></i></div>
+            <h3 class="feature-title">Natural Voice Interaction</h3>
+            <p class="feature-desc">Engage using direct spoken responses processed in real time by browser speech APIs. No artificial click-to-type interfaces.</p>
+        </div>
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="ri-git-branch-line"></i></div>
+            <h3 class="feature-title">Adaptive Difficulty</h3>
+            <p class="feature-desc">Our intelligent Gemini backend dynamically calibrates question complexity based on the depth of your answers.</p>
+        </div>
+        <div class="glass-card feature-card">
+            <div class="feature-icon"><i class="ri-bar-chart-2-line"></i></div>
+            <h3 class="feature-title">Granular Performance Reports</h3>
+            <p class="feature-desc">Analyze evaluations covering technical accuracy, grammar, confidence metrics, and targeted learning recommendations.</p>
+        </div>
+    </div>
+</section>
+
+<section id="workflow" class="section-container" style="background: rgba(13, 17, 39, 0.4); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+    <div class="section-header">
+        <h2 class="section-title">How InterviewIQ Works</h2>
+        <p class="section-subtitle">Complete a full interview simulation in three simple steps.</p>
+    </div>
+    <div class="card-grid">
+        <div class="glass-card feature-card" style="text-align: center;">
+            <div class="feature-icon" style="margin: 0 auto 24px auto;"><i class="ri-sound-module-line"></i></div>
+            <h3 class="feature-title">1. Setup Profile</h3>
+            <p class="feature-desc">Select your target technology, target experience bracket, difficulty profile, and preferred interview count.</p>
+        </div>
+        <div class="glass-card feature-card" style="text-align: center;">
+            <div class="feature-icon" style="margin: 0 auto 24px auto;"><i class="ri-vidicon-line"></i></div>
+            <h3 class="feature-title">2. Simulate Interview</h3>
+            <p class="feature-desc">Interact inside a Zoom-styled conference room layout. Listen to AI questions, speak responses, and view transcription feeds.</p>
+        </div>
+        <div class="glass-card feature-card" style="text-align: center;">
+            <div class="feature-icon" style="margin: 0 auto 24px auto;"><i class="ri-file-list-3-line"></i></div>
+            <h3 class="feature-title">3. Retrieve Report</h3>
+            <p class="feature-desc">Review your overall performance charts, feedback matrices, strengths analysis, and printable PDF development plans.</p>
+        </div>
+    </div>
+</section>
+
+<section id="categories" class="section-container">
+    <div class="section-header">
+        <h2 class="section-title">Supported Technical Tracks</h2>
+        <p class="section-subtitle">Practice tailored questions written specifically for standard corporate job roles.</p>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; max-width: 900px; margin: 0 auto;">
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Python Developer</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">SQL & Database Architect</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Full Stack Engineer</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Data Scientist</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Machine Learning</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Frontend & JavaScript</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Backend Engineer</span>
+        <span class="glass-card" style="padding: 12px 24px; font-weight: 600; border-radius: 30px;">Behavioral & HR</span>
+    </div>
+</section>
+
+<section id="faq" class="section-container" style="border-top: 1px solid var(--glass-border);">
+    <div class="section-header">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Answers to common inquiries about the simulation environment.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 800px; margin: 0 auto;">
+        <details class="glass-card" style="padding: 24px; cursor: pointer;">
+            <summary style="font-weight: 600; font-size: 16px; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                Is it necessary to use a headset or external microphone?
+                <i class="ri-arrow-down-s-line"></i>
+            </summary>
+            <p style="color: var(--text-secondary); margin-top: 12px; font-size: 15px; line-height: 1.5;">
+                We recommend standard headphones and a quiet room to ensure the Web Speech API accurately transcribes your spoken answers. A built-in laptop microphone also works.
+            </p>
+        </details>
+        <details class="glass-card" style="padding: 24px; cursor: pointer;">
+            <summary style="font-weight: 600; font-size: 16px; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                Which browsers are fully supported?
+                <i class="ri-arrow-down-s-line"></i>
+            </summary>
+            <p style="color: var(--text-secondary); margin-top: 12px; font-size: 15px; line-height: 1.5;">
+                Speech Synthesis and Speech Recognition APIs are fully compatible with Google Chrome, Microsoft Edge, and Apple Safari. Firefox supports Speech Synthesis but has limited support for Speech Recognition.
+            </p>
+        </details>
+        <details class="glass-card" style="padding: 24px; cursor: pointer;">
+            <summary style="font-weight: 600; font-size: 16px; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+                How does the adaptive difficulty evaluation logic function?
+                <i class="ri-arrow-down-s-line"></i>
+            </summary>
+            <p style="color: var(--text-secondary); margin-top: 12px; font-size: 15px; line-height: 1.5;">
+                If your answer receives high grades (e.g. above 80 points), the interviewer transitions the next question to a harder difficulty profile. If you struggle or give brief answers, it asks follow-up clarifying questions or lowers the level.
+            </p>
+        </details>
+    </div>
+</section>
+
+<footer style="padding: 40px 8%; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-muted); font-size: 14px;">
+    <p>&copy; 2026 InterviewIQ. Practice. Improve. Get Hired. All rights reserved.</p>
+</footer>
+{% endblock %}

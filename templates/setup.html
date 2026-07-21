@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Setup Interview - InterviewIQ{% endblock %}
+
+{% block header_title %}Setup Practice Session{% endblock %}
+
+{% block content %}
+<div class="setup-grid">
+    <div class="glass-card dashboard-widget">
+        <h3 class="widget-title">Configure Interview Parameters</h3>
+        <form action="{{ url_for('api_start_interview') }}" method="POST" id="setup-form">
+
+            <div class="form-group">
+                <label for="category" class="form-label">Interview Category</label>
+                <select id="category" name="category" class="form-select">
+                    <option value="Python">Python Developer</option>
+                    <option value="Java">Java Developer</option>
+                    <option value="C#">C# Developer</option>
+                    <option value="SQL">SQL &amp; Database Architect</option>
+                    <option value="JavaScript">JavaScript &amp; Frontend</option>
+                    <option value="Full Stack">Full Stack Engineer</option>
+                    <option value="Machine Learning">Machine Learning Engineer</option>
+                    <option value="Data Science">Data Scientist</option>
+                    <option value="Customer Service">Customer Service Executive</option>
+                    <option value="Marketing">Marketing Specialist</option>
+                    <option value="Sales">Sales Representative</option>
+                    <option value="HR">Behavioral &amp; HR</option>
+                    <option value="custom">✏️ Custom Topic…</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="custom-topic-group" style="display: none;">
+                <label for="custom_topic" class="form-label">
+                    <i class="ri-edit-line" style="margin-right:4px;color:var(--accent-indigo);"></i>
+                    Your Custom Topic
+                </label>
+                <input
+                    type="text"
+                    id="custom_topic"
+                    name="custom_topic"
+                    class="form-input"
+                    placeholder="e.g. Django REST Framework, System Design, AWS Lambda…"
+                    autocomplete="off"
+                >
+                <p style="font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+                    <i class="ri-sparkling-line" style="color:var(--accent-indigo);"></i>
+                    Gemini AI will generate every question specifically around this topic.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="experience_level" class="form-label">Experience Level</label>
+                <select id="experience_level" name="experience_level" class="form-select" required>
+                    <option value="Fresher">Fresher (Entry Level)</option>
+                    <option value="1-2 Years">Junior (1–2 Years)</option>
+                    <option value="3-5 Years">Intermediate (3–5 Years)</option>
+                    <option value="Senior">Senior (5+ Years)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty" class="form-label">Starting Difficulty</label>
+                <select id="difficulty" name="difficulty" class="form-select" required>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Hard">Hard</option>
+                    <option value="Expert">Expert</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="num_questions" class="form-label">Number of Questions</label>
+                <select id="num_questions" name="num_questions" class="form-select" required>
+                    <option value="5" selected>5 Questions</option>
+                    <option value="10">10 Questions</option>
+                    <option value="15">15 Questions</option>
+                    <option value="20">20 Questions</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interview_type" class="form-label">Interview Mode</label>
+                <select id="interview_type" name="interview_type" class="form-select" required>
+                    <option value="Voice" selected>Voice (Interactive speech to text)</option>
+                    <option value="Text">Text (Keyboard inputs only)</option>
+                </select>
+            </div>
+
+            <div id="topic-error" style="
+                display: none;
+                background: rgba(239,68,68,0.12);
+                border: 1px solid rgba(239,68,68,0.35);
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 13px;
+                color: #f87171;
+                margin-bottom: 4px;
+            ">
+                <i class="ri-error-warning-line"></i>
+                Please enter a custom topic before starting the interview.
+            </div>
+
+            <button type="submit" class="btn-primary" id="start-btn"
+                    style="margin-top: 16px; width: 100%; justify-content: center; padding: 14px;">
+                Initialize Virtual Interview Room &nbsp;<i class="ri-arrow-right-line"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="glass-card dashboard-widget" style="height: fit-content; padding: 24px;">
+        <h3 class="widget-title" style="margin-bottom: 16px;">Tips for Success</h3>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;
+                   font-size: 14px; line-height: 1.5; color: var(--text-secondary);">
+            <li style="display: flex; gap: 12px;">
+                <i class="ri-checkbox-circle-line" style="color: var(--success); font-size: 18px; flex-shrink:0;"></i>
+                Ensure your microphone is connected and browser permissions are granted when prompted.
+            </li>
+            <li style="display: flex; gap: 12px;">
+                <i class="ri-checkbox-circle-line" style="color: var(--success); font-size: 18px; flex-shrink:0;"></i>
+                Conduct the session in a quiet environment to minimise transcription errors in voice mode.
+            </li>
+            <li style="display: flex; gap: 12px;">
+                <i class="ri-checkbox-circle-line" style="color: var(--success); font-size: 18px; flex-shrink:0;"></i>
+                Speak clearly and at a moderate pace — the browser's speech recognition does the rest.
+            </li>
+            <li style="display: flex; gap: 12px;">
+                <i class="ri-checkbox-circle-line" style="color: var(--success); font-size: 18px; flex-shrink:0;"></i>
+                You can always type your answer manually in the text box below each question.
+            </li>
+            <li style="display: flex; gap: 12px; margin-top: 8px;">
+                <i class="ri-sparkling-2-line" style="color: var(--accent-indigo); font-size: 18px; flex-shrink:0;"></i>
+                Pick <strong>✏️ Custom Topic</strong> to practice any subject — e.g.
+                <em>Kubernetes, GraphQL, Prompt Engineering</em>.
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    'use strict';
+
+    const categorySelect   = document.getElementById('category');
+    const customTopicGroup = document.getElementById('custom-topic-group');
+    const customTopicInput = document.getElementById('custom_topic');
+    const topicError       = document.getElementById('topic-error');
+    const form             = document.getElementById('setup-form');
+
+    function toggleCustomField() {
+        const isCustom = categorySelect.value === 'custom';
+        customTopicGroup.style.display = isCustom ? 'block' : 'none';
+        topicError.style.display       = 'none';
+        if (isCustom) {
+            customTopicInput.focus();
+        }
+    }
+
+    categorySelect.addEventListener('change', toggleCustomField);
+    toggleCustomField();
+
+    form.addEventListener('submit', function (e) {
+        if (categorySelect.value !== 'custom') return;
+
+        const topic = customTopicInput.value.trim();
+
+        if (!topic) {
+            e.preventDefault();
+            topicError.style.display       = 'block';
+            customTopicInput.style.borderColor = 'var(--danger)';
+            customTopicInput.focus();
+            return;
+        }
+
+        customTopicInput.style.borderColor = '';
+        topicError.style.display           = 'none';
+
+        categorySelect.disabled = true;
+        const hidden = document.createElement('input');
+        hidden.type  = 'hidden';
+        hidden.name  = 'category';
+        hidden.value = topic;
+        form.appendChild(hidden);
+    });
+
+    customTopicInput.addEventListener('input', function () {
+        customTopicInput.style.borderColor = '';
+        topicError.style.display           = 'none';
+    });
+})();
+</script>
+{% endblock %}

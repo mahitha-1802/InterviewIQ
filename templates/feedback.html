@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Report - InterviewIQ{% endblock %}
+
+{% block header_title %}Performance Evaluation{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+    <div>
+        <h2 style="font-size: 20px; font-weight: 600;">Evaluation Report for {{ interview.category }} Interview</h2>
+        <span style="font-size: 14px; color: var(--text-secondary);">Date Completed: {{ interview.created_at.split(' ')[0] }} &bull; Experience: {{ interview.experience_level }}</span>
+    </div>
+    <button onclick="window.print()" class="btn-secondary">
+        <i class="ri-printer-line"></i> Save / Print PDF
+    </button>
+</div>
+
+{% if interview.hiring_recommendation %}
+    {% set rec = interview.hiring_recommendation %}
+    {% if rec == 'Strong Hire' or rec == 'Hire' %}
+        <div class="feedback-banner success">
+            <i class="ri-checkbox-circle-fill" style="font-size: 28px; color: var(--success);"></i>
+            <div>
+                <h4 style="font-size: 16px; font-weight: 700;">Hiring Recommendation: {{ rec }}</h4>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">Candidate demonstrated satisfactory mastery of the required technical principles and communication standards.</p>
+            </div>
+        </div>
+    {% elif rec == 'Borderline' %}
+        <div class="feedback-banner warning">
+            <i class="ri-error-warning-fill" style="font-size: 28px; color: var(--warning);"></i>
+            <div>
+                <h4 style="font-size: 16px; font-weight: 700;">Hiring Recommendation: {{ rec }}</h4>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">Candidate showed decent competency but needs minor alignment in technical depth or presentation.</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="feedback-banner warning" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2);">
+            <i class="ri-close-circle-fill" style="font-size: 28px; color: var(--danger);"></i>
+            <div>
+                <h4 style="font-size: 16px; font-weight: 700;">Hiring Recommendation: {{ rec }}</h4>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">Candidate did not meet the key competency requirements. Recommending further training before retrying.</p>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+
+<div class="report-grid">
+    <div>
+        <div class="glass-card report-section-card" style="text-align: center;">
+            <h3 class="widget-title" style="margin-bottom: 24px;">Overall Score</h3>
+            <div class="score-circle-wrapper">
+                <svg class="score-circle-svg" width="140" height="140">
+                    <circle class="score-circle-bg" cx="70" cy="70" r="60"></circle>
+                    <circle class="score-circle-fill" cx="70" cy="70" r="60" id="overallScoreCircle"></circle>
+                    <defs>
+                        <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#6366f1"></stop>
+                            <stop offset="100%" stop-color="#a855f7"></stop>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="score-circle-text">{{ interview.overall_score|int }}</div>
+            </div>
+            <div style="font-size: 14px; color: var(--text-secondary); max-width: 220px; margin: 0 auto;">
+                Aggregate percentage score derived across all performance indicators.
+            </div>
+        </div>
+
+        <div class="glass-card report-section-card" style="margin-top: 32px;">
+            <h3 class="widget-title">Metrics Breakdown</h3>
+            <div class="metric-row">
+                <div class="metric-header">
+                    <span>Technical Knowledge</span>
+                    <span>{{ interview.technical_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.technical_score }}%;"></div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-header">
+                    <span>Communication</span>
+                    <span>{{ interview.communication_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.communication_score }}%;"></div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-header">
+                    <span>Problem Solving</span>
+                    <span>{{ interview.problem_solving_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.problem_solving_score }}%;"></div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-header">
+                    <span>Confidence</span>
+                    <span>{{ interview.confidence_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.confidence_score }}%;"></div>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-header">
+                    <span>Grammar & Vocabulary</span>
+                    <span>{{ interview.grammar_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.grammar_score }}%;"></div>
+                </div>
+            </div>
+            <div class="metric-row" style="margin-bottom: 0;">
+                <div class="metric-header">
+                    <span>Professionalism</span>
+                    <span>{{ interview.professionalism_score|int }}%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" style="width: {{ interview.professionalism_score }}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="glass-card report-section-card">
+            <h3 class="widget-title">Performance Chart</h3>
+            <div style="height: 280px; position: relative;">
+                <canvas id="performanceRadarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="glass-card report-section-card" style="margin-top: 32px;">
+            <h3 class="widget-title">Interviewer Summary</h3>
+            <p style="font-size: 15px; line-height: 1.6; color: var(--text-secondary);">{{ interview.summary }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="report-grid" style="margin-top: 32px;">
+    <div class="glass-card report-section-card">
+        <h3 class="widget-title" style="color: var(--success);"><i class="ri-checkbox-circle-line"></i> Strengths</h3>
+        <ul class="report-list">
+            {% if strengths_list %}
+                {% for item in strengths_list %}
+                    <li class="report-list-item strength">
+                        <i class="ri-check-line"></i>
+                        <span>{{ item }}</span>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li style="color: var(--text-muted); font-size: 14px;">No feedback recorded.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="glass-card report-section-card">
+        <h3 class="widget-title" style="color: var(--danger);"><i class="ri-close-circle-line"></i> Weaknesses</h3>
+        <ul class="report-list">
+            {% if weaknesses_list %}
+                {% for item in weaknesses_list %}
+                    <li class="report-list-item weakness">
+                        <i class="ri-close-line"></i>
+                        <span>{{ item }}</span>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li style="color: var(--text-muted); font-size: 14px;">No feedback recorded.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div class="report-grid" style="margin-top: 32px; margin-bottom: 60px;">
+    <div class="glass-card report-section-card">
+        <h3 class="widget-title" style="color: var(--warning);"><i class="ri-focus-2-line"></i> Topics to Improve</h3>
+        <ul class="report-list">
+            {% if topics_list %}
+                {% for item in topics_list %}
+                    <li class="report-list-item">
+                        <i class="ri-arrow-right-s-line" style="color: var(--warning);"></i>
+                        <span>{{ item }}</span>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li style="color: var(--text-muted); font-size: 14px;">No feedback recorded.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="glass-card report-section-card">
+        <h3 class="widget-title" style="color: var(--accent-indigo);"><i class="ri-map-pin-2-line"></i> Recommended Learning Path</h3>
+        <ul class="report-list">
+            {% if path_list %}
+                {% for item in path_list %}
+                    <li class="report-list-item path">
+                        <i class="ri-direction-line"></i>
+                        <span>{{ item }}</span>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li style="color: var(--text-muted); font-size: 14px;">No learning items recorded.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const score = {{ interview.overall_score|default(0)|int }};
+        const circle = document.getElementById("overallScoreCircle");
+        if (circle) {
+            const circumference = 2 * Math.PI * 60;
+            const offset = circumference - (circumference * score / 100);
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 100);
+        }
+
+        const labels = ["Technical", "Communication", "Problem Solving", "Confidence", "Grammar", "Professionalism"];
+        const values = [
+            {{ interview.technical_score|default(0) }},
+            {{ interview.communication_score|default(0) }},
+            {{ interview.problem_solving_score|default(0) }},
+            {{ interview.confidence_score|default(0) }},
+            {{ interview.grammar_score|default(0) }},
+            {{ interview.professionalism_score|default(0) }}
+        ];
+        renderRadarChart("performanceRadarChart", labels, values);
+    });
+</script>
+{% endblock %}

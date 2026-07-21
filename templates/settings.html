@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - InterviewIQ{% endblock %}
+
+{% block header_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="setup-grid">
+    <div class="glass-card dashboard-widget">
+        <h3 class="widget-title">AI Integration Settings</h3>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="feedback-banner {% if 'Successfully' in messages[0] %}success{% else %}warning{% endif %}" style="margin-bottom: 24px; padding: 12px 16px; font-size: 14px;">
+                    <i class="ri-information-line"></i>
+                    <div>{{ messages[0] }}</div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('settings') }}" method="POST">
+            <input type="hidden" name="action" value="save_api_key">
+            <div class="form-group">
+                <label for="api_key" class="form-label">Google Gemini API Key</label>
+                <input type="password" id="api_key" name="api_key" class="form-input" 
+                       placeholder="{% if has_api_key %}••••••••••••••••••••••••••••••••{% else %}Enter your Gemini API Key{% endif %}">
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                    Your key is stored securely using symmetric encryption. If left blank, the application will attempt to read the `GEMINI_API_KEY` environment variable.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button type="submit" class="btn-primary">
+                    Save Configuration
+                </button>
+                {% if has_api_key %}
+                    <button type="submit" name="clear_key" value="true" class="btn-secondary" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">
+                        Clear Key
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <div class="glass-card dashboard-widget" style="height: fit-content; padding: 24px;">
+        <h3 class="widget-title" style="margin-bottom: 16px;">AI Sandbox Sandbox Mode</h3>
+        <p style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px;">
+            If no API key is set via environment variables or settings, InterviewIQ operates in **Interactive Simulation Mode**.
+        </p>
+        <div style="padding: 16px; border-radius: var(--border-radius-sm); background: rgba(99, 102, 241, 0.1); border: 1px dashed rgba(99, 102, 241, 0.3); font-size: 13px; line-height: 1.5;">
+            <i class="ri-lightbulb-line" style="color: var(--accent-indigo); font-size: 16px; display: block; margin-bottom: 8px; font-weight: bold;">Sandbox Note</i>
+            This simulates the complete voice flow with standard technical questions and graded mock metrics, allowing complete offline evaluations.
+        </div>
+    </div>
+</div>
+{% endblock %}

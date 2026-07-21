@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}History - InterviewIQ{% endblock %}
+
+{% block header_title %}Practice History{% endblock %}
+
+{% block content %}
+<div class="glass-card dashboard-widget" style="margin-bottom: 32px; padding: 24px;">
+    <form action="{{ url_for('history') }}" method="GET" class="filter-row">
+        <div class="search-input-wrapper">
+            <i class="ri-search-line search-input-icon"></i>
+            <input type="text" name="search" value="{{ search_query }}" class="form-input search-input" placeholder="Search by category (e.g. Python, SQL)...">
+        </div>
+        <div style="width: 200px;">
+            <select name="difficulty" class="form-select">
+                <option value="">All Difficulties</option>
+                <option value="Easy" {% if difficulty_filter == 'Easy' %}selected{% endif %}>Easy</option>
+                <option value="Medium" {% if difficulty_filter == 'Medium' %}selected{% endif %}>Medium</option>
+                <option value="Hard" {% if difficulty_filter == 'Hard' %}selected{% endif %}>Hard</option>
+                <option value="Expert" {% if difficulty_filter == 'Expert' %}selected{% endif %}>Expert</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-primary">
+            <i class="ri-filter-line"></i> Filter
+        </button>
+        {% if search_query or difficulty_filter %}
+            <a href="{{ url_for('history') }}" class="btn-secondary" style="display: flex; align-items: center; justify-content: center;">
+                Reset
+            </a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="glass-card dashboard-widget">
+    <h3 class="widget-title">Historical Sessions</h3>
+    <div style="overflow-x: auto;">
+        {% if interviews %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--glass-border); color: var(--text-muted);">
+                        <th style="padding: 16px 20px;">Category</th>
+                        <th style="padding: 16px 20px;">Date</th>
+                        <th style="padding: 16px 20px;">Difficulty</th>
+                        <th style="padding: 16px 20px;">Type</th>
+                        <th style="padding: 16px 20px;">Duration</th>
+                        <th style="padding: 16px 20px;">Score</th>
+                        <th style="padding: 16px 20px; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for interview in interviews %}
+                        <tr style="border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); cursor: pointer;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 16px 20px; font-weight: 600;">{{ interview.category }}</td>
+                            <td style="padding: 16px 20px;">{{ interview.created_at.split(' ')[0] }}</td>
+                            <td style="padding: 16px 20px;">
+                                <span style="font-size: 12px; padding: 2px 8px; border-radius: 12px; background: var(--bg-tertiary); font-weight: 500;">
+                                    {{ interview.difficulty }}
+                                </span>
+                            </td>
+                            <td style="padding: 16px 20px;">{{ interview.interview_type }}</td>
+                            <td style="padding: 16px 20px;">{{ (interview.duration_seconds / 60)|int }}m {{ interview.duration_seconds % 60 }}s</td>
+                            <td style="padding: 16px 20px;">
+                                <span class="score-badge {% if interview.overall_score and interview.overall_score >= 80 %}high{% endif %}">
+                                    {% if interview.overall_score %}{{ interview.overall_score|int }}%{% else %}Incomplete{% endif %}
+                                </span>
+                            </td>
+                            <td style="padding: 16px 20px; text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="{{ url_for('feedback', interview_id=interview.id) }}" class="btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: var(--border-radius-sm);">
+                                    <i class="ri-file-list-3-line"></i> View Report
+                                </a>
+                                <form action="{{ url_for('delete_interview', interview_id=interview.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this report? This cannot be undone.');">
+                                    <button type="submit" class="control-btn" style="width: 28px; height: 28px; border-radius: 4px; font-size: 14px; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: var(--danger);">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 60px 0; color: var(--text-muted);">
+                No historical records found. Complete a practice session to save results.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

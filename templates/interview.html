@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Arena - InterviewIQ{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sidebar { display: none !important; }
+    .main-content { margin-left: 0 !important; width: 100% !important; padding: 24px !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="interviewData" data-id="{{ interview.id }}" data-type="{{ interview.interview_type }}" data-total="{{ interview.num_questions }}"></div>
+
+<div class="interview-screen-container">
+    <div class="video-conference-area">
+        <div class="video-grid">
+            <div class="glass-card video-panel" id="aiPanel">
+                <div class="ai-avatar-container">
+                    <div class="ai-pulse-glow"></div>
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C13.8 4 15.5 4.7 16.8 5.8L15.4 7.2C14.5 6.4 13.3 6 12 6C9.2 6 6.8 8.1 6.1 10.8L4.1 9.3C5.5 6.1 8.5 4 12 4ZM12 20C8.5 20 5.5 17.9 4.1 14.7L6.1 13.2C6.8 15.9 9.2 18 12 18C13.3 18 14.5 17.6 15.4 16.8L16.8 18.2C15.5 19.3 13.8 20 12 20ZM12 8C14.2 8 16 9.8 16 12C16 14.2 14.2 16 12 16C9.8 16 8 14.2 8 12C8 9.8 9.8 8 12 8Z" fill="url(#avatar-gradient)"/>
+                        <defs>
+                            <linearGradient id="avatar-gradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#6366f1" />
+                                <stop offset="1" stop-color="#a855f7" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="video-label">
+                    <span style="display:inline-block; width:8px; height:8px; background:var(--success); border-radius:50%;"></span>
+                    AI Interviewer (Active)
+                </div>
+            </div>
+
+            <div class="glass-card video-panel" id="userPanel">
+                <video id="candidateVideo" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                <div id="candidateAvatarFallback" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: var(--bg-tertiary);">
+                    <i class="ri-user-line" style="font-size: 80px; color: var(--text-muted);"></i>
+                </div>
+                <div class="video-label">
+                    <i class="ri-user-line" style="color:#ffffff;"></i>
+                    You (Candidate)
+                </div>
+            </div>
+        </div>
+
+        <div class="interview-controls">
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <div style="font-size: 14px; font-weight: 600;">
+                    Category: <span style="color: var(--accent-indigo);">{{ interview.category }}</span>
+                </div>
+                <div style="font-size: 14px; font-weight: 600;">
+                    Elapsed Time: <span id="interviewTimer" style="color: var(--accent-purple);">00:00</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <button class="control-btn" id="toggleMicBtn" title="Mute/Unmute microphone">
+                    <i class="ri-mic-off-line"></i>
+                </button>
+                <button class="btn-primary" id="endInterviewBtn" style="background: var(--danger); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);">
+                    <i class="ri-phone-line"></i> End Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card chat-side-panel">
+        <div style="padding: 20px; border-bottom: 1px solid var(--glass-border);">
+            <div class="progress-container" style="margin-bottom: 12px;">
+                <div class="progress-bar" id="progressBarFill"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                <span id="progressBarLabel">Question 0 of {{ interview.num_questions }}</span>
+                <span>Type: {{ interview.interview_type }}</span>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+        </div>
+
+        <div style="padding: 0 20px 10px 20px;">
+            <div class="wave-container" id="visualWave">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <textarea id="answerInput" class="form-input" placeholder="Type or speak your answer here..." style="resize: none; height: 60px; padding: 12px;"></textarea>
+            <button class="btn-primary" id="submitAnswerBtn" style="height: 60px; padding: 0 20px;">
+                <i class="ri-send-plane-2-line"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/interview.js') }}"></script>
+{% endblock %}

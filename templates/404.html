@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - InterviewIQ{% endblock %}
+
+{% block public_content %}
+<div class="interactive-background">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+</div>
+
+<div class="error-page-container">
+    <div class="glass-card" style="padding: 60px; max-width: 500px;">
+        <div class="error-code">404</div>
+        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 12px; font-family: 'Outfit';">Lost in Space</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 32px;">
+            The page you are looking for does not exist or has been moved. Let's get you back on track.
+        </p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('dashboard') }}" class="btn-primary">
+            <i class="ri-dashboard-line"></i> Return to Dashboard
+        </a>
+        {% else %}
+        <a href="/" class="btn-primary">
+            <i class="ri-home-line"></i> Go to Homepage
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
