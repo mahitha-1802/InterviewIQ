@@ -5,11 +5,6 @@
 InterviewIQ is an AI-powered virtual interview simulator designed to help candidates prepare for real job interviews. The platform generates adaptive questions using Google Gemini, evaluates responses across six performance dimensions, and delivers comprehensive hiring reports with actionable feedback.
 
 ---
-# InterviewIQ
-
-## Overview
-A web application that helps users prepare for technical interviews using AI.
-
 ## Features
 - AI-generated interview questions
 - User authentication
