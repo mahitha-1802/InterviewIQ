@@ -33,7 +33,20 @@ python app.py
 
 ## Screenshots
 
-(Add images here)
+### Home Page
+![Home Page](screenshots/Home%20page.png)
+
+### Sign In
+![Sign In](screenshots/Sign%20in%20page.png)
+
+### Sign Up
+![Sign Up](screenshots/Sign%20up%20page.png)
+
+### Dashboard
+![Dashboard](screenshots/Dashboard%20page.png)
+
+### Practice Session
+![Practice Session](screenshots/pratice%20session%20page.png)
 
 ## Future Enhancements
 
