@@ -617,7 +617,6 @@ def api_custom_question():
 def page_not_found(e):
     return render_template("404.html", hide_sidebar=True), 404
 
-
+init_db()
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
